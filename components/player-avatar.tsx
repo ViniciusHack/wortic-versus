@@ -1,5 +1,5 @@
-import type { Player } from "@/types/game"
 import { getColorClass } from "@/lib/utils"
+import type { Player } from "@/types/game"
 
 interface PlayerAvatarProps {
   player: Player
@@ -16,7 +16,7 @@ export default function PlayerAvatar({ player, isCurrentPlayer }: PlayerAvatarPr
       }}
     >
       <div
-        className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${getColorClass(player.color)} ${isCurrentPlayer ? "ring-2 ring-black" : ""}`}
+        className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${getColorClass(player.color || "blue")} ${isCurrentPlayer ? "ring-2 ring-black" : ""}`}
       >
         {player.name.charAt(0).toUpperCase()}
       </div>
