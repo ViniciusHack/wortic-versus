@@ -217,21 +217,11 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
                 event: "start-to-play",
                 payload: {
                   roundEndTime,
-                  currentRound: prevState.currentRound + 1
+                  currentRound: prevState.currentRound
                 }
               })
 
               setIsGameStarted(true)
-        
-              setGameState(prevState => ({
-                ...prevState,
-                roundStarted: true,
-                roundEndTime: roundEndTime,
-                currentRound: prevState.currentRound + 1
-              }))
-              
-              // Update to playing screen
-              setCurrentScreen(GameScreen.PLAYING_ROUND)
             }
 
             return {
@@ -239,8 +229,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
               players: updatedPlayers,
               targetWords: updatedTargetWords,
               roundStarted: true,
-              roundEndTime: roundEndTime,
-              currentRound: prevState.currentRound + 1
+              roundEndTime: roundEndTime
             }
           }
 
@@ -303,10 +292,10 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
       .on("broadcast", { event: "round-end" }, (payload: { payload: { roundWinnerId: string | null, players: Record<string, Player> } }) => {
         // Update scores and prepare for next round
         setGameState(prevState => {
-          // Use the updated players state from the payload
+          // Use the updated players state from the payload, which includes the updated scores
           const updatedPlayers = { ...payload.payload.players }
           
-          // Reset player's state for the next round
+          // Reset player's round-specific state while preserving scores and roundsWon
           Object.keys(updatedPlayers).forEach(pid => {
             updatedPlayers[pid] = {
               ...updatedPlayers[pid],
@@ -315,7 +304,10 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
               gameComplete: false,
               isWinner: false,
               solveTime: undefined,
-              hasSetWord: false
+              hasSetWord: false,
+              // Preserve score and roundsWon from the payload
+              score: updatedPlayers[pid].score,
+              roundsWon: updatedPlayers[pid].roundsWon
             }
           })
 
@@ -331,12 +323,12 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
           }
         })
       })
-      .on("broadcast", { event: "round-start" }, () => {
+      .on("broadcast", { event: "round-start" }, (payload: { payload: { currentRound: number } }) => {
         // Reset players' game state for the next round
         setGameState(prevState => {
           const updatedPlayers = { ...prevState.players }
           
-          // Reset each player's round-specific state
+          // Reset each player's round-specific state while preserving scores
           Object.keys(updatedPlayers).forEach(pid => {
             updatedPlayers[pid] = {
               ...updatedPlayers[pid],
@@ -345,7 +337,10 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
               gameComplete: false,
               isWinner: false,
               solveTime: undefined,
-              hasSetWord: false
+              hasSetWord: false,
+              // Preserve existing score and roundsWon
+              score: updatedPlayers[pid].score,
+              roundsWon: updatedPlayers[pid].roundsWon
             }
           })
 
@@ -354,7 +349,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
             players: updatedPlayers,
             targetWords: {},
             gameOver: false,
-            currentRound: prevState.currentRound + 1,
+            currentRound: payload.payload.currentRound,
             roundEndTime: 0,
             roundStarted: false
           }
@@ -630,7 +625,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
     setGameState(prevState => {
       const updatedPlayers = { ...prevState.players }
       
-      // Reset each player's round-specific state
+      // Reset each player's round-specific state while preserving scores
       Object.keys(updatedPlayers).forEach(pid => {
         updatedPlayers[pid] = {
           ...updatedPlayers[pid],
@@ -640,6 +635,9 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
           isWinner: false,
           solveTime: undefined,
           hasSetWord: false,
+          // Preserve existing score and roundsWon
+          score: updatedPlayers[pid].score,
+          roundsWon: updatedPlayers[pid].roundsWon
         }
       })
 
@@ -648,7 +646,6 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
         players: updatedPlayers,
         targetWords: {},
         gameOver: false,
-        currentRound: prevState.currentRound + 1,
         roundEndTime: 0,
         roundStarted: false
       }
@@ -657,12 +654,14 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
     // Move to word setting screen for next round
     setCurrentScreen(GameScreen.WORD_SETTING)
     
-    // Broadcast next round start
+    // Broadcast next round start with current round number
     if (channel) {
       channel.send({
         type: "broadcast",
         event: "round-start",
-        payload: {}
+        payload: {
+          currentRound: gameState.currentRound + 1
+        }
       })
     }
   }

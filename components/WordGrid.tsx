@@ -1,11 +1,16 @@
 "use client"
 
-import type React from "react"
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
+import type React from "react";
+
+interface LetterResult {
+  key: string;
+  color: 'green' | 'yellow' | 'gray';
+}
 
 interface WordGridProps {
   currentGuess: string
-  guesses: any[]
+  guesses: LetterResult[][]
   turn: number
 }
 
@@ -41,10 +46,10 @@ const CurrentRow: React.FC<{ currentGuess: string }> = ({ currentGuess }) => {
   )
 }
 
-const PastRow: React.FC<{ guess: any }> = ({ guess }) => {
+const PastRow: React.FC<{ guess: LetterResult[] }> = ({ guess }) => {
   return (
     <div className="grid grid-cols-5 gap-1">
-      {guess.map((letter: any, i: number) => (
+      {guess.map((letter: LetterResult, i: number) => (
         <motion.div
           key={i}
           className={`w-14 h-14 flex items-center justify-center text-2xl font-bold rounded ${

@@ -7,7 +7,6 @@ import { useGame } from "@/contexts/GameContext"
 export function PlayingRoundScreen() {
   const { gameState, playerId, opponentId, submitGuess } = useGame()
   
-  const currentPlayer = gameState.players[playerId]
   const opponent = opponentId ? gameState.players[opponentId] : null
   
   // Get current target word for this player
@@ -27,7 +26,7 @@ export function PlayingRoundScreen() {
       {/* Opponent's board */}
       {opponent && opponentId && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">{opponent.name}'s Board</h3>
+          <h3 className="text-lg font-semibold">{opponent.name}&apos;s Board</h3>
           {/* Format opponent's guesses for WordGrid */}
           <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
             <WordGrid 

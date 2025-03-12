@@ -73,7 +73,7 @@ export default function JoinRoom({ onJoinRoom, initialRoomId = "", isJoiningFrom
                 required={!isCreating}
                 disabled={isJoiningFromLink}
               />
-              {isJoiningFromLink && <p className="text-sm text-muted-foreground">You're joining via a shared link</p>}
+              {isJoiningFromLink && <p className="text-sm text-muted-foreground">You&apos;re joining via a shared link</p>}
             </div>
           )}
         </CardContent>

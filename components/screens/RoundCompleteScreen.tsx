@@ -59,7 +59,7 @@ export function RoundCompleteScreen() {
           
           {opponent && (
             <div className="space-y-2">
-              <h4 className="font-medium">{opponent.name}'s Results:</h4>
+              <h4 className="font-medium">{opponent.name}&apos;s Results:</h4>
               <p>Target Word: <span className="font-bold">{opponentTargetWord.toUpperCase()}</span></p>
               <p>Solved: <span className="font-bold">{opponentCompleted ? (opponentWon ? "Yes" : "No") : "Incomplete"}</span></p>
               <p>Turns Used: <span className="font-bold">{opponentTurns}</span></p>

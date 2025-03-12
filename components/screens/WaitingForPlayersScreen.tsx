@@ -59,7 +59,7 @@ export function WaitingForPlayersScreen() {
               
               {isHost ? (
                 <div className="text-center space-y-2">
-                  <p>You're the host. Start the game when ready:</p>
+                  <p>You&apos;re the host. Start the game when ready:</p>
                   <Button 
                     onClick={startGame}
                     className="w-full"

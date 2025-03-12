@@ -11,6 +11,7 @@ export function WordSettingScreen() {
   const { gameState, playerId, opponentId, submitWord } = useGame()
   const [customWord, setCustomWord] = useState("")
   
+  console.log("players",gameState.players)
   const currentPlayer = gameState.players[playerId]
   const hasSetWord = currentPlayer?.hasSetWord || false
   
@@ -59,7 +60,7 @@ export function WordSettingScreen() {
         ) : (
           <div className="text-center space-y-4">
             <div className="p-2 bg-green-100 text-green-800 rounded">
-              You've set a word for your opponent!
+              You&apos;ve set a word for your opponent!
             </div>
             
             {opponentHasSetWord ? (
@@ -82,7 +83,7 @@ export function WordSettingScreen() {
           
           {opponent && (
             <div className="text-center p-2 border rounded">
-              <p className="font-medium">{opponent.name}'s Status:</p>
+              <p className="font-medium">{opponent.name}&apos;s Status:</p>
               <p>{opponentHasSetWord ? "Word Set ✓" : "Waiting..."}</p>
             </div>
           )}

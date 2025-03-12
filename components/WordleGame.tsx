@@ -12,7 +12,7 @@ interface WordleGameProps {
 }
 
 export const Board: React.FC<WordleGameProps> = ({ solution, onGuessSubmit }) => {
-  const { currentGuess, guesses, turn, isCorrect, usedKeys, handleKeyup } = useWordle(solution, onGuessSubmit)
+  const { currentGuess, guesses, turn, usedKeys, handleKeyup } = useWordle(solution, onGuessSubmit)
 
   useEffect(() => {
     window.addEventListener("keyup", handleKeyup)
