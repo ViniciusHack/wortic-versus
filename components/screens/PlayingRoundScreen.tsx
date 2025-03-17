@@ -32,7 +32,7 @@ export function PlayingRoundScreen() {
             <WordGrid 
               currentGuess="" 
               guesses={opponent.guesses.map(guess => {
-                if (!guess) return [];
+                if (!guess) return null ;
                 
                 // Format the guess string into letter objects with colors
                 const opponentTargetWord = gameState.targetWords[opponentId] || "";

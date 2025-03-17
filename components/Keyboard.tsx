@@ -22,7 +22,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({ usedKeys, handleKeyup }) => 
         return "bg-green-500 text-white"
       case "yellow":
         return "bg-yellow-500 text-white"
-      case "grey":
+      case "gray":
         return "bg-gray-500 text-white"
       default:
         return "bg-gray-200 text-gray-800"

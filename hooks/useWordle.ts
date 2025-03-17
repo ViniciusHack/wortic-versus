@@ -13,7 +13,7 @@ export const useWordle = (solution: string, onGuessSubmit?: (guess: string) => v
   const formatGuess = useCallback(() => {
     const solutionArray = [...solution] as (string | null)[]
     const formattedGuess = [...currentGuess].map((l) => {
-      return { key: l, color: "grey" }
+      return { key: l, color: "gray" }
     })
 
     formattedGuess.forEach((l, i) => {
@@ -63,8 +63,8 @@ export const useWordle = (solution: string, onGuessSubmit?: (guess: string) => v
           newKeys[l.key] = "yellow"
           return
         }
-        if (l.color === "grey" && currentColor !== "green" && currentColor !== "yellow") {
-          newKeys[l.key] = "grey"
+        if (l.color === "gray" && currentColor !== "green" && currentColor !== "yellow") {
+          newKeys[l.key] = "gray"
         }
       })
       return newKeys

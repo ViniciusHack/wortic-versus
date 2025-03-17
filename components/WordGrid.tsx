@@ -10,7 +10,7 @@ interface LetterResult {
 
 interface WordGridProps {
   currentGuess: string
-  guesses: (LetterResult | null)[][]
+  guesses: (LetterResult[] | null)[]
   turn: number
 }
 
