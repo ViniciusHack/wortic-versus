@@ -10,7 +10,7 @@ interface LetterResult {
 
 interface WordGridProps {
   currentGuess: string
-  guesses: LetterResult[][]
+  guesses: (LetterResult | null)[][]
   turn: number
 }
 
@@ -21,7 +21,7 @@ export const WordGrid: React.FC<WordGridProps> = ({ currentGuess, guesses, turn 
         if (turn === i) {
           return <CurrentRow key={i} currentGuess={currentGuess} />
         }
-        return guess ? <PastRow key={i} guess={guess} /> : <EmptyRow key={i} />
+        return guess ? <PastRow key={i} guess={guess as LetterResult[]} /> : <EmptyRow key={i} />
       })}
     </div>
   )

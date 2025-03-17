@@ -32,12 +32,12 @@ export function PlayingRoundScreen() {
             <WordGrid 
               currentGuess="" 
               guesses={opponent.guesses.map(guess => {
-                if (!guess) return null;
+                if (!guess) return [];
                 
                 // Format the guess string into letter objects with colors
                 const opponentTargetWord = gameState.targetWords[opponentId] || "";
                 const formattedGuess = [...guess].map((letter, i) => {
-                  let color = "grey";
+                  let color: "green" | "yellow" | "gray" = "gray";
                   
                   // Check for exact match (green)
                   if (opponentTargetWord[i] === letter) {

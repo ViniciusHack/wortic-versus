@@ -171,6 +171,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
           setOpponentId(otherId)
         }
 
+        console.log("players - presence called",{players})
         // Update game state with players
         setGameState((prevState) => ({
           ...prevState,
@@ -206,10 +207,12 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
           const allPlayersSetWords = Object.values(updatedPlayers).every(player => player.hasSetWord)
           
           // Start the round if all players have set words
+          console.log("allPlayersSetWords",allPlayersSetWords,prevState.roundStarted, isHost)
           if (allPlayersSetWords && !prevState.roundStarted) {
             // Set a 3-minute timer for the round
             const roundEndTime = Date.now() + 3 * 60 * 1000
             
+
             // Only the host broadcasts round start
             if (isHost) {
               roomChannel.send({
@@ -222,6 +225,12 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
               })
 
               setIsGameStarted(true)
+              setGameState(prevState => ({
+                ...prevState,
+                roundStarted: true,
+                roundEndTime: roundEndTime
+              }))
+              setCurrentScreen(GameScreen.PLAYING_ROUND)
             }
 
             return {
@@ -462,11 +471,6 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
         updatedTargetWords[opponentId] = upperWord
       }
 
-      // Update presence data
-      if (channel) {
-        channel.track(updatedPlayers[playerId])
-      }
-
       // Check if all players have set words
       const allPlayersSetWords = Object.values(updatedPlayers).every(player => player.hasSetWord)
       
@@ -482,6 +486,9 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
             currentRound: prevState.currentRound + 1
           }
         })
+
+        setIsGameStarted(true)
+        setCurrentScreen(GameScreen.PLAYING_ROUND)
         
         return {
           ...prevState,
@@ -549,18 +556,20 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
       })
     }
 
+    console.log("guess Submitted",updatedPlayer)
     // Update local game state
     setGameState((prevState) => {
       const updatedPlayers = { ...prevState.players }
       updatedPlayers[playerId] = updatedPlayer
 
       // Check if round is over
+      console.log("updatedPlayers6666",updatedPlayers)
       const roundOver = Object.values(updatedPlayers).every(player => 
         player.gameComplete || player.currentRow >= 6
       )
 
       // If round is over and we're the host, broadcast round-end
-      if (roundOver && !prevState.gameOver && isHost) {
+      if (roundOver && !prevState.gameOver) {
         // Compute scores and determine winner before ending round
         let roundWinnerId: string | null = null
         let bestAttempts = 7 // More than max attempts possible
@@ -589,6 +598,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
         // Update scores for the winner
         if (roundWinnerId) {
           updatedPlayers[roundWinnerId].score += Math.max(6 - updatedPlayers[roundWinnerId].currentRow, 1) * 10
+          console.log("roundWinnerId",roundWinnerId,updatedPlayers[roundWinnerId].score)
           updatedPlayers[roundWinnerId].roundsWon += 1
         }
 
@@ -610,6 +620,7 @@ export function GameProvider({ children, playerName, roomId, playerId }: GamePro
         setCurrentScreen(GameScreen.ROUND_COMPLETE)
       }
 
+      console.log("roundOver, state updated",roundOver, updatedPlayers)
       return {
         ...prevState,
         players: updatedPlayers,

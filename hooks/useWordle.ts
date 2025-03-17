@@ -11,7 +11,7 @@ export const useWordle = (solution: string, onGuessSubmit?: (guess: string) => v
   const [usedKeys, setUsedKeys] = useState<{ [key: string]: string }>({})
 
   const formatGuess = useCallback(() => {
-    const solutionArray = [...solution]
+    const solutionArray = [...solution] as (string | null)[]
     const formattedGuess = [...currentGuess].map((l) => {
       return { key: l, color: "grey" }
     })
